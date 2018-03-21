@@ -43,7 +43,7 @@ func (u Url) saveToDB(tx *sql.Tx) error {
 	// Execute the insert statement
 	_, err := tx.Exec(query, params...)
 	if err != nil {
-		err = fmt.Errorf("Could not execute sql statement '%v'. %v\n", query, err)
+		err = fmt.Errorf("Could not execute sql statement '%v' %v. %v\n", query, params, err)
 		return err
 	}
 
@@ -77,7 +77,8 @@ func checkAlias(alias string, tx *sql.Tx) (bool, error) {
 	query := "SELECT * FROM " + table + " WHERE alias = $1;"
 
 	// Execute the select statement
-	_, err := tx.Query(query, alias)
+	rows, err := tx.Query(query, alias)
+	defer rows.Close()
 	if err != nil {
 		// If alias is not present in DB
 		if err == sql.ErrNoRows {

@@ -1,0 +1,13 @@
+{
+  "db_config": {
+    "db_username": "",
+    "db_password": "",
+    "db_name": "",
+    "db_host": "",
+    "db_port": "",
+    "table": ""
+  },
+  "url_alias_length": 10,
+  "server_port": "",
+  "url_host": ""
+}

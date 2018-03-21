@@ -74,6 +74,8 @@ func getMd5Hash(s string, t time.Time) string {
 func getAlias(s string, tx *sql.Tx) (string, error) {
 	var alias string
 
+	// Simple solution to work around hash collisions
+	// Since we are not using the entire hash we can use different sub parts of it in case of a collision
 	for i := 0; i < len(s); i++ {
 		end := i + ConfigGl.UrlAliasLength
 
