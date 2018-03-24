@@ -32,7 +32,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, err := generateShortUrl(v)
+	s, err := generateShortURL(v)
 	if err != nil {
 		fmt.Printf("Could not generate short url. %v\n", err.Error())
 		errorHandler(w, r, http.StatusInternalServerError)
@@ -50,14 +50,14 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 func IdHandler(w http.ResponseWriter, r *http.Request) {
 	alias := r.URL.Path[5:]
 
-	longUrl, err := getLongUrl(alias)
+	longURL, err := getLongURL(alias)
 	if err != nil {
 		fmt.Printf("Could not get long url. %v\n", err.Error())
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
 
-	http.Redirect(w, r, longUrl, http.StatusSeeOther)
+	http.Redirect(w, r, longURL, http.StatusSeeOther)
 }
 
 func errorHandler(w http.ResponseWriter, r *http.Request, status int) {

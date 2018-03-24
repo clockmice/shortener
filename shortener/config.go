@@ -7,18 +7,18 @@ import (
 )
 
 type Config struct {
-	DbConfig       DBConfig `json:"db_config"`
-	UrlAliasLength int      `json:"url_alias_length"`
+	DBConfig       DBConfig `json:"db_config"`
+	URLAliasLength int      `json:"url_alias_length"`
 	ServerPort     string   `json:"server_port"`
-	UrlHost        string   `json:"url_host"`
+	URLHost        string   `json:"url_host"`
 }
 
 type DBConfig struct {
-	DbUsername string `json:"db_username"`
-	DbPassword string `json:"db_password"`
-	DbName     string `json:"db_name"`
-	DbHost     string `json:"db_host"`
-	DbPort     string `json:"db_port"`
+	DBUsername string `json:"db_username"`
+	DBPassword string `json:"db_password"`
+	DBName     string `json:"db_name"`
+	DBHost     string `json:"db_host"`
+	DBPort     string `json:"db_port"`
 	Table      string `json:"table"`
 }
 

@@ -2,28 +2,28 @@ package shortener
 
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
 	"fmt"
+	_ "github.com/lib/pq"
 )
 
-var Db *sql.DB
+var DB *sql.DB
 
 const (
-	DbDriver     = "postgres"
-	DbTimeFormat = "2006-01-02 15:04:05"
+	DBDriver     = "postgres"
+	DBTimeFormat = "2006-01-02 15:04:05"
 )
 
 func CreateDBConnection(c *Config) error {
-	host := c.DbConfig.DbHost
-	port := c.DbConfig.DbPort
-	user := c.DbConfig.DbUsername
-	pass := c.DbConfig.DbPassword
-	db := c.DbConfig.DbName
+	host := c.DBConfig.DBHost
+	port := c.DBConfig.DBPort
+	user := c.DBConfig.DBUsername
+	pass := c.DBConfig.DBPassword
+	db := c.DBConfig.DBName
 
-	config := "host=" + host + " port=" + port + " dbname=" + db + " user=" + user + " password=" + pass
+	config := fmt.Sprintf("host=%v port=%v dbname=%v user=%v password=%v", host, port, db, user, pass)
 
 	var err error
-	Db, err = sql.Open(DbDriver, config)
+	DB, err = sql.Open(DBDriver, config)
 	if err != nil {
 		err = fmt.Errorf("Could not open sql connection. %v\n", err)
 		return err
@@ -32,13 +32,15 @@ func CreateDBConnection(c *Config) error {
 	return nil
 }
 
-// Saves fields of the Url struct to database
-func (u Url) saveToDB(tx *sql.Tx) error {
+// Saves fields of the URL struct to database
+func (u URL) saveToDB(tx *sql.Tx) error {
 
-	table := ConfigGl.DbConfig.Table
-
-	query := "INSERT INTO " + table + " (alias, url, timestamp) VALUES ($1, $2, $3);"
-	params := []interface{}{u.Alias, u.Url, u.Timestamp.Format(DbTimeFormat)}
+	query := fmt.Sprintf("INSERT INTO %v (alias, url, timestamp) VALUES ($1, $2, $3);", ConfigGl.DBConfig.Table)
+	params := []interface{}{
+		u.Alias,
+		u.URL,
+		u.Timestamp.Format(DBTimeFormat),
+	}
 
 	// Execute the insert statement
 	_, err := tx.Exec(query, params...)
@@ -50,31 +52,31 @@ func (u Url) saveToDB(tx *sql.Tx) error {
 	return nil
 }
 
-func getLongUrl(alias string) (string, error) {
+func getLongURL(alias string) (string, error) {
 
-	var longUrl string
+	var longURL string
 
-	table := ConfigGl.DbConfig.Table
+	table := ConfigGl.DBConfig.Table
 
-	query := "SELECT url FROM " + table + " WHERE alias = $1;"
+	query := fmt.Sprintf("SELECT url FROM %v WHERE alias = $1;", table)
 
 	// Execute the select sql
-	row := Db.QueryRow(query, alias)
+	row := DB.QueryRow(query, alias)
 
-	err := row.Scan(&longUrl)
+	err := row.Scan(&longURL)
 	if err != nil {
 		err = fmt.Errorf("Could not run query '%v'. %v\n", query, err)
 		return "", err
 	}
 
-	return longUrl, nil
+	return longURL, nil
 }
 
 func checkAlias(alias string, tx *sql.Tx) (bool, error) {
 
-	table := ConfigGl.DbConfig.Table
+	table := ConfigGl.DBConfig.Table
 
-	query := "SELECT * FROM " + table + " WHERE alias = $1;"
+	query := fmt.Sprintf("SELECT * FROM %v WHERE alias = $1;", table)
 
 	// Execute the select statement
 	rows, err := tx.Query(query, alias)
