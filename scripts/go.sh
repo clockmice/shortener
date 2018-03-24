@@ -1,2 +1,2 @@
 #!/bin/bash
-yun install -y go
+yum install -y go
