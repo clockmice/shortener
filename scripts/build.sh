@@ -1,3 +1,2 @@
 #!/bin/bash
-cd /cmd
-go build
+cd /cmd && go get && go build

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/urlshortener/shortener"
+	"../shortener"
 	"github.com/gorilla/mux"
 	"net/http"
 	"flag"
