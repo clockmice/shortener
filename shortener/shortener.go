@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"database/sql"
-	"encoding/base64"
+	"crypto/md5"
+	"encoding/hex"
 )
 
 var ConfigGl Config
@@ -95,7 +96,9 @@ func (u *URL) Hash() string {
 	// Using timestamp as a salt to create a unique hash from the same URL
 	s := u.URL + u.Timestamp.String()
 
-	hash := base64.StdEncoding.EncodeToString([]byte(s))
+	hasher := md5.New()
+	hasher.Write([]byte(s))
+	hash := hex.EncodeToString(hasher.Sum(nil))
 
 	return hash
 }
